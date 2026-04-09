@@ -1,6 +1,7 @@
 # Google Test And Debugging Writeup
 
 ## Things I Thought To Test
+### (from prompt delete after ) A list of the things that you thought to test BEFORE you looked at the actual test cases
 1. Thing 1
 2. Thing 2
 3. Thing 3
