@@ -9,11 +9,21 @@ auto word_generator() {
     /* Creates a generator for a string made up of
      * characters from [a - z]
      */
+    auto lower_case_letter_generator = rc::gen::inRange<char>('a', 'z' + 1);
+    return rc::gen::container<std::string>(lower_case_letter_generator);
 }
 
 auto vector_of_ints_to_vector_of_strings(const std::vector<int>& numbers) {
     /* Create a vector of strings from a vector of ints
      */
+    std::vector<std::string>string_ofnumbers;
+
+    for (int i = 0; i < numbers.size(); i++) {
+        std::string addthis = std::to_string(numbers.at(i));
+        string_ofnumbers.push_back(addthis);
+    }
+    return string_ofnumbers;
+
 }
 
 //void parse_args(int argc, char** argv, int* ar_out, int* len_out){

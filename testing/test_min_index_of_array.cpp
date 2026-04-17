@@ -67,16 +67,34 @@ TEST(MinIndexOfArrayTests, SimpleArrayDoesNotChange) {
 
 RC_GTEST_PROP(MinIndexOfArrayTests,
               PropertyFindMinIndex,
-              ()) {
+              (const std::vector<int>& values)) {
     /* Check that the value at the location of the minimum index
      * is not larger than any of the other values in the array
      */
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
+
+    int min_index = min_index_of_array(my_array, values.size());
+
+    for (int i = 0; i < values.size(); i++) {
+        ASSERT_GT(my_array[i], my_array[min_index]);
+    }
 }
 
 RC_GTEST_PROP(MinIndexOfArrayTests,
               PropertyArrayDoesNotChange,
-              ()) {
+              (const std::vector<int>& values)) {
     /*
      * Check that finding the minimum of the array did not change the contents of the array.
      */
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
+
+    min_index_of_array(my_array, values.size());
+    for (int i = 0; i < values.size(); i++) {
+        ASSERT_EQ(my_array[i], values.at(i));
+    }
+
+
+
 }

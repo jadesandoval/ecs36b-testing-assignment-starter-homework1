@@ -117,19 +117,19 @@ TEST(GetSortedTests, SimpleCopyWasMade) {
 
 RC_GTEST_PROP(GetSortedTests,
               PropertyAfterSortingValuesAreInAscendingOrder,
-              ( std::vector<int> values) //<-- this will give you a randomized vector of ints named values
+              (const std::vector<int> &values) //<-- this will give you a randomized vector of ints named values
 ) {
     /* Check that after sorting an array, the values are in ascending order
      * Don't forget to free any memory that was dynamically allocated as part of this test
      */
 
-    std::vector<int>my_array;
-    my_array.push_back(values);
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
 
-    int *my_new_array[] = get_sorted(my_array, my_array.size());
+    int* my_new_array = get_sorted(my_array, values.size());
 
-    for (int i = 0; i < my_array.size() - 1; i++) {
-        EXPECT_LT(my_new_array[i], my_new_array[i + 1]);
+    for (int i = 0; i < values.size() - 1; i++) {
+        EXPECT_LE(my_new_array[i], my_new_array[i + 1]);
     }
 
     free(my_new_array);
@@ -144,6 +144,19 @@ RC_GTEST_PROP(GetSortedTests,
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
     ;
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
+
+    int my_array_copy[values.size()];
+    copy_vector_to_array(values, my_array_copy);
+
+    int* my_new_array = get_sorted(my_array, values.size());
+
+    for (int i = 0; i < values.size(); i++) {
+        EXPECT_EQ(my_array_copy[i], my_array[i]);
+    }
+
+    free(my_new_array);
 }
 
 RC_GTEST_PROP(GetSortedTests,
@@ -155,6 +168,17 @@ RC_GTEST_PROP(GetSortedTests,
      * (ar and copy point to different locations in memory and no parts of the two arrays overlap)
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
+    int* my_new_array = get_sorted(my_array, values.size());
+
+    for (int i = 0; i < values.size() - 1; i++) {
+        EXPECT_LE(my_new_array[i], my_new_array[i+1]);
+    }
+
+    EXPECT_NE(my_array, my_new_array);
+
+    free(my_new_array);
 
 }
 

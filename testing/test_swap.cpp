@@ -44,6 +44,12 @@ RC_GTEST_PROP(SwapTests,
     /*
      * Swap two values and see if the swap was successful.
      */
+  int a = a_start;
+  int b = b_start;
+  swap(&a_start, &b_start);
+
+  ASSERT_EQ(a_start, b);
+  ASSERT_EQ(b_start, a);
 }
 
 
@@ -54,4 +60,21 @@ RC_GTEST_PROP(SwapTests,
     /*
      * Swap two values in an array. See that they swapped and the others did not
      */
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
+
+    int backup_array(values.size());
+    copy_vector_to_array(values, backup_array);
+
+    int zeroindex = my_array[0];
+    int oneindex = my_array[1];
+
+    swap(&my_array[0], &my_array[1]);
+    ASSERT_EQ(my_array[0], oneindex);
+    ASSERT_EQ(my_array[1], zeroindex);
+
+    for (int i = 2; i < values.size(); i++) {
+        ASSERT_EQ(my_array[i], backup_array[i]);
+    }
+
 }

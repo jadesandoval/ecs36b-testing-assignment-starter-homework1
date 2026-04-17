@@ -60,6 +60,15 @@ RC_GTEST_PROP(CopyArrayTests,
      * Check that the values in the copy are the same as the values in the original array.
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
+
+    int* newarray = copy_array(my_array, values.size());
+
+    for (int i = 0; i < values.size(); i++) {
+        EXPECT_EQ(newarray[i], my_array[i]);
+    }
+    free(newarray);
 
 }
 
@@ -71,6 +80,16 @@ RC_GTEST_PROP(CopyArrayTests,
      * Check that the  values in the original array did not change.
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
+
+    copy_array(my_array, values.size());
+
+    for (int i = 0; i < values.size(); i++) {
+        ASSERT_EQ(my_array[i], values.at(i));
+    }
+
+    free(copy);
 
 }
 
@@ -83,6 +102,13 @@ RC_GTEST_PROP(CopyArrayTests,
   * (ar and copy point to different locations in memory and no parts of the two arrays overlap)
   * Don't forget to free any memory that was dynamically allocated as part of your test.
   */
+    int my_array[values.size()];
+    copy_vector_to_array(values, my_array);
+
+    int* mycopy = copy_array(my_array, values.size());
+    EXPECT_NE(my_array, mycopy);
+
+    free(mycopy);
 
 }
 
