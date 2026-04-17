@@ -18,7 +18,7 @@ void print_ar(int* ar, int len) {
     printf("%d ", ar[i]);
   }
 }
-
+// example: 1, 2, 3, 4, 5 void parse_args(5, 1 2 3 4 5, ar_out, len_out);
 void parse_args(int argc, char** argv, int* ar_out, int* len_out){
   /**
  * Transform the command line arguments from their string representations to their numeric values
