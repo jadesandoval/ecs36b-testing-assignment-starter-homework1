@@ -52,7 +52,18 @@ TEST(ParseArgsTests, SimpleCheckArgumentsParsedSuccessfully) {
      * (ar_out and len_out are set to the right values).
      * Don't forget to free any memory that was dynamically allocated as part of your test.'
      */
-    parse_args(5, "1, 2, 3, 4, 5");
+    const char* fakeargs[] = {"program name", "1", "2", "3", "4", "5"};
+    int* array_out = nullptr;
+    int len_out = 0;
+    parse_args(6, (char**)fakeargs, &array_out, &len_out);
+
+    EXPECT_EQ(len_out, 5);
+    EXPECT_NE(array_out, nullptr);
+
+    for (int i = 0; i < len_out; i++) {
+        EXPECT_EQ(array_out[i], i + 1);
+    }
+    free(array_out);
 
 }
 
@@ -60,17 +71,48 @@ TEST(ParseArgsTests, SimpleCheckParseNoArgs) {
     /*
      * Check that you parse you can successfully parse "no" command line arguments.
      */
+    const char* fakeargs[] = {"program name"};
+    int* array_out = nullptr;
+    int len_out = 0;
+    parse_args(1, (char**)fakeargs, &array_out, &len_out);
+
+    EXPECT_EQ(array_out, nullptr);
+    free(array_out);
 }
 
 
 RC_GTEST_PROP(ParseArgsTests,
               PropertyCheckArgumentsParsedSuccessfully,
-              ()
+              (const std::vector<int>& numbers)
 ) {
     /* Check that we can correctly parse the command line
      * arguments when we receive 1 or more arguments.
      * Don't forget to free any memory that was dynamically allocated as part of this test
      */
+    std::vector<const char*> fakeargs;
+    fakeargs.push_back("program_name");
+
+    auto string_of_vecs = vector_of_ints_to_vector_of_strings(numbers);
+    for (const auto& x: string_of_vecs) {
+        fakeargs.push_back(x.c_str());
+    }
+
+    int* array_out = nullptr;
+    int len_out = 0;
+
+    parse_args(fakeargs.size(), (char**)fakeargs.data(), &array_out, &len_out);
+
+    EXPECT_EQ(len_out, (int)numbers.size());
+
+    if (array_out != nullptr) {
+        for (int i = 0; i < len_out && i < (int)numbers.size(); i++) {
+            EXPECT_EQ(array_out[i], numbers[i]);
+        }
+
+    }else if (numbers.size() > 0) {
+        ADD_FAILURE() << "array_out was null yet the numbers vector was not empty";
+    }
+    free(array_out);
 }
 
 RC_GTEST_PROP(ParseArgsTests,
@@ -80,4 +122,14 @@ RC_GTEST_PROP(ParseArgsTests,
     /*
      * Check that you parse you can successfully parse "no" command line arguments.
      */
+    const char* fakeargs[] = {"program_name"};
+    int* array_out = nullptr;
+    int len_out = -1;
+
+    parse_args(1, (char**)fakeargs, &array_out, &len_out);
+
+    EXPECT_EQ(len_out, 0);
+    EXPECT_EQ(array_out, nullptr);
+
+    free(array_out);
 }
