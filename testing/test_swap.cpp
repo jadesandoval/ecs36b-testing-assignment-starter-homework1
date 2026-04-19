@@ -14,7 +14,7 @@ TEST(SwapTests, SimpleSwapTwoValues) {
      */
     int a = 10;
     int b = 20;
-    swap(a, b);
+    swap(&a, &b);
 
     ASSERT_EQ(a, 20);
     ASSERT_EQ(b, 10);
@@ -60,21 +60,19 @@ RC_GTEST_PROP(SwapTests,
     /*
      * Swap two values in an array. See that they swapped and the others did not
      */
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
+    if (values.size() >= 2) {
+        std::vector<int> my_array = values;
+        std::vector<int> backup_array = values;
 
-    int backup_array(values.size());
-    copy_vector_to_array(values, backup_array);
+        int zeroindex = my_array[0];
+        int oneindex = my_array[1];
 
-    int zeroindex = my_array[0];
-    int oneindex = my_array[1];
+        swap(&my_array[0], &my_array[1]);
+        RC_ASSERT(my_array[0] == oneindex);
+        RC_ASSERT(my_array[1] == zeroindex);
 
-    swap(&my_array[0], &my_array[1]);
-    ASSERT_EQ(my_array[0], oneindex);
-    ASSERT_EQ(my_array[1], zeroindex);
-
-    for (int i = 2; i < values.size(); i++) {
-        ASSERT_EQ(my_array[i], backup_array[i]);
+        for (size_t i = 2; i < values.size(); i++) {
+            RC_ASSERT(my_array[i] == backup_array[i]);
+        }
     }
-
 }

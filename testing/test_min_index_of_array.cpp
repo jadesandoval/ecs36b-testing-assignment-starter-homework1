@@ -59,8 +59,8 @@ TEST(MinIndexOfArrayTests, SimpleArrayDoesNotChange) {
     int newarray[]= {1, 2, 3, 4, 5};
     min_index_of_array(newarray, 5);
 
-    for (int i = 0; i < 5, i++) {
-        ASSERT_EQ(newarray[i], newarray[i]+1);
+    for (int i = 0; i < 5; i++) {
+        ASSERT_EQ(newarray[i], newarray[i + 1]);
     }
 }
 
@@ -71,13 +71,14 @@ RC_GTEST_PROP(MinIndexOfArrayTests,
     /* Check that the value at the location of the minimum index
      * is not larger than any of the other values in the array
      */
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
 
-    int min_index = min_index_of_array(my_array, values.size());
+    if (values.empty()) return;
 
-    for (int i = 0; i < values.size(); i++) {
-        ASSERT_GT(my_array[i], my_array[min_index]);
+    std::vector<int> my_array = values;
+    int min_index = min_index_of_array(my_array.data(), values.size());
+
+    for (size_t i = 0; i < values.size(); i++) {
+        RC_ASSERT(my_array[i] >= my_array[min_index]);
     }
 }
 
@@ -87,14 +88,10 @@ RC_GTEST_PROP(MinIndexOfArrayTests,
     /*
      * Check that finding the minimum of the array did not change the contents of the array.
      */
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
+    std::vector<int> my_array = values;
 
-    min_index_of_array(my_array, values.size());
-    for (int i = 0; i < values.size(); i++) {
-        ASSERT_EQ(my_array[i], values.at(i));
+    min_index_of_array(my_array.data(), my_array.size());
+    for (size_t i = 0; i < values.size(); i++) {
+        RC_ASSERT(my_array[i] == values.at(i));
     }
-
-
-
 }
