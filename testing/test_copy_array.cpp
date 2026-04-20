@@ -17,10 +17,10 @@ TEST(CopyArrayTests, SimpleValuesAreSame) {
     int *newarray = copy_array(arraytest, 5);
 
     for (int i = 0; i < 5; i++) {
-      EXPECT_EQ(arraytest[i], newarray[i]); << "Values in copy should be same as orginal." <<
+        EXPECT_EQ(arraytest[i], newarray[i]) << "Values in copy should be same as orginal.";
     }
     free(newarray);
-
+}
 
 TEST(CopyArrayTests, SimpleOriginalDoesNotChange) {
     /*
@@ -30,8 +30,8 @@ TEST(CopyArrayTests, SimpleOriginalDoesNotChange) {
     int arraytests[] = {1, 2, 3, 4};
     int *newarray = copy_array(arraytests, 4);
 
-    for (int i = 1; i < 5; i++) {
-      EXPECT_EQ(arraytests[i] == i); << "Values in the orginal array should not change." <<
+    for (int i = 0; i < 4; i++) {
+      EXPECT_EQ(arraytests[i], i + 1) << "Values in the orginal array should not change.";
     }
     free(newarray);
 }
@@ -46,7 +46,7 @@ TEST(CopyArrayTests, SimpleCopyWasMade) {
     int arraytest[] = {1, 2, 3, 4};
     int *newarray = copy_array(arraytest, 4);
 
-    EXPECT_NE(&arraytest[0], &newarray[0]); << "ar and copy should be in two different places in memory" <<
+    EXPECT_NE(&arraytest[0], &newarray[0]) << "ar and copy should be in two different places in memory" ;
     free(newarray);
 
 }
@@ -60,13 +60,12 @@ RC_GTEST_PROP(CopyArrayTests,
      * Check that the values in the copy are the same as the values in the original array.
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
 
-    int* newarray = copy_array(my_array, values.size());
+    std::vector<int> my_array = values;
+    int* newarray = copy_array(my_array.data(), my_array.size());
 
-    for (int i = 0; i < values.size(); i++) {
-        EXPECT_EQ(newarray[i], my_array[i]);
+    for (size_t i = 0; i < values.size(); i++) {
+        RC_ASSERT(newarray[i] == my_array[i]);
     }
     free(newarray);
 
@@ -80,17 +79,14 @@ RC_GTEST_PROP(CopyArrayTests,
      * Check that the  values in the original array did not change.
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
+    std::vector<int> my_array = values;
 
-    copy_array(my_array, values.size());
+    int* copy = copy_array(my_array.data(), my_array.size());
 
-    for (int i = 0; i < values.size(); i++) {
-        ASSERT_EQ(my_array[i], values.at(i));
+    for (size_t i = 0; i < values.size(); i++) {
+        RC_ASSERT(my_array[i] == values.at(i));
     }
-
     free(copy);
-
 }
 
 RC_GTEST_PROP(CopyArrayTests,
@@ -102,14 +98,12 @@ RC_GTEST_PROP(CopyArrayTests,
   * (ar and copy point to different locations in memory and no parts of the two arrays overlap)
   * Don't forget to free any memory that was dynamically allocated as part of your test.
   */
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
+    std::vector<int> my_array = values;
 
-    int* mycopy = copy_array(my_array, values.size());
-    EXPECT_NE(my_array, mycopy);
+    int* mycopy = copy_array(my_array.data(), my_array.size());
+    RC_ASSERT_FALSE(my_array.data() == mycopy);
 
     free(mycopy);
-
 }
 
 

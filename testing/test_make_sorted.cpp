@@ -1,8 +1,8 @@
 #include "../src/sorting.h"
-#include "rapidcheck/gtest.h"
 #include "sorting.h"
 #include "test_helpers.h"
 #include "gtest/gtest.h"
+#include "rapidcheck/gtest.h"
 #include <cstdlib>
 #include <vector>
 
@@ -28,7 +28,7 @@ TEST(MakeSortedTests, SimpleSortSortedArray) {
     make_sorted(myarray, 5);
 
     for (int i = 0; i < 4; i++) {
-      ASSERT_LE(myarray[i], myarray[i+1]); << "Array should stay sorted." <<
+      ASSERT_LE(myarray[i], myarray[i+1]) << "Array should stay sorted.";
     }
 
 }
@@ -42,7 +42,7 @@ TEST(MakeSortedTests, SimpleSortReverseSortedArray) {
     make_sorted(myarray, 5);
 
     for (int i = 0; i < 4; i++) {
-        ASSERT_LE(myarray[i], myarray[i+1]); << "Array should be sorted." <<
+        ASSERT_LE(myarray[i], myarray[i+1]) << "Array should be sorted.";
     }
 }
 
@@ -56,7 +56,7 @@ TEST(MakeSortedTests, SimpleSortAverageArray) {
     make_sorted(myarray, 5);
 
     for (int i = 0; i < 4; i++) {
-        ASSERT_LE(myarray[i], myarray[i+1]); << "Array should be sorted." <<
+        ASSERT_LE(myarray[i], myarray[i+1]) << "Array should be sorted." ;
     }
 }
 
@@ -69,7 +69,7 @@ TEST(MakeSortedTests, SimpleSortArrayWithDuplicates) {
     make_sorted(myarray, 5);
 
     for (int i = 0; i < 4; i++) {
-        ASSERT_LE(myarray[i], myarray[i+1]); << "Array should be sorted." <<
+        ASSERT_LE(myarray[i], myarray[i+1]) << "Array should be sorted." ;
     }
 }
 
@@ -80,12 +80,11 @@ RC_GTEST_PROP(MakeSortedTests,
     /* Test that after sorting an array, the values are in ascending order
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
+    RC_PRE(!values.empty());
+    std::vector<int> my_array = values;
+    make_sorted(my_array.data(), my_array.size());
 
-    make_sorted(my_array, values.size());
-
-    for (int i = 0; i < values.size() - 1; i++) {
-        ASSERT_LE(my_array[i], my_array[i+1]);
+    for (size_t i = 0; i < values.size() - 1; i++) {
+        RC_ASSERT(my_array[i] <= my_array[i+1]);
     }
 }

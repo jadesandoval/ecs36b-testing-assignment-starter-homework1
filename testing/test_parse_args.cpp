@@ -18,7 +18,7 @@ auto vector_of_ints_to_vector_of_strings(const std::vector<int>& numbers) {
      */
     std::vector<std::string>string_ofnumbers;
 
-    for (int i = 0; i < numbers.size(); i++) {
+    for (size_t i = 0; i < numbers.size(); i++) {
         std::string addthis = std::to_string(numbers.at(i));
         string_ofnumbers.push_back(addthis);
     }

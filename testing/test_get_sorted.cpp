@@ -1,8 +1,8 @@
 #include "../src/sorting.h"
-#include "rapidcheck/gtest.h"
 #include "sorting.h"
 #include "test_helpers.h"
 #include "gtest/gtest.h"
+#include "rapidcheck/gtest.h"
 #include <cstdlib>
 
 //int* get_sorted(int* ar, int len) {
@@ -28,7 +28,7 @@ TEST(GetSortedTests, SimpleSortSortedArray) {
     int newarray[] = {7, 9, 13, 16, 18};
     int *sorted_array = get_sorted(newarray, 5);
     for (int i = 0; i < 4; i++) {
-        EXPECT_LT(sorted_array[i], sorted_array[i+1]); << "This array should be sorted already" <<
+        EXPECT_LT(sorted_array[i], sorted_array[i+1]) << "This array should be sorted already";
     }
     free(sorted_array);
 
@@ -42,7 +42,7 @@ TEST(GetSortedTests, SimpleSortReverseSortedArray) {
     int newarray[] = {100, 90, 80, 70, 60};
     int *sorted_array = get_sorted(newarray, 5);
     for (int i = 0; i < 4; i++) {
-        EXPECT_LT(sorted_array[i], sorted_array[i+1]); << "This array did not sort correctly." <<
+        EXPECT_LT(sorted_array[i], sorted_array[i+1]) << "This array did not sort correctly." ;
     }
     free(sorted_array);
 
@@ -56,7 +56,7 @@ TEST(GetSortedTests, SimpleSortAverageArray) {
     int newarray[] = {6, 9, 4, 12, 11};
     int *sorted_array = get_sorted(newarray, 5);
     for (int i = 0; i < 4; i++) {
-        EXPECT_LT(sorted_array[i], sorted_array[i+1]); << "This array did not sort correctly." <<
+        EXPECT_LT(sorted_array[i], sorted_array[i+1]) << "This array did not sort correctly." ;
     }
     free(sorted_array);
 
@@ -70,7 +70,7 @@ TEST(GetSortedTests, SimpleSortArrayWithDuplicates) {
     int newarray[] = {11, 94, 73, 94, 94};
     int *sorted_array = get_sorted(newarray, 5);
     for (int i = 0; i < 4; i++) {
-        EXPECT_LT(sorted_array[i], sorted_array[i+1]); << "This array did not sort correctly." <<
+        EXPECT_LE(sorted_array[i], sorted_array[i+1])<< "This array did not sort correctly." ;
     }
     free(sorted_array);
 
@@ -82,13 +82,12 @@ TEST(GetSortedTests, SimpleOriginalDoesNotChange) {
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
     int newarray[] = {1, 9, 5, 2, 3};
-    int copyofnewarray[5];
-    copy_vector_to_array(newarray, copyofnewarray);
+    int copyofnewarray[] = {1, 9, 5, 2, 3};
 
     int *sorted_array = get_sorted(newarray, 5);
 
-    for (int i = 0; i < 5){
-        EXPECT_EQ(newarray[i], copyofnewarray[i]); << "The original aray should stay the same." >
+    for (int i = 0; i < 5; i++){
+        EXPECT_EQ(newarray[i], copyofnewarray[i]) << "The original aray should stay the same." ;
     }
     free(sorted_array);
 }
@@ -123,13 +122,12 @@ RC_GTEST_PROP(GetSortedTests,
      * Don't forget to free any memory that was dynamically allocated as part of this test
      */
 
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
+    std::vector<int> my_array = values;
 
-    int* my_new_array = get_sorted(my_array, values.size());
+    int* my_new_array = get_sorted(my_array.data(), my_array.size());
 
-    for (int i = 0; i < values.size() - 1; i++) {
-        EXPECT_LE(my_new_array[i], my_new_array[i + 1]);
+    for (size_t i = 0; i < values.size() - 1; i++) {
+        RC_ASSERT(my_new_array[i] <= my_new_array[i + 1]);
     }
 
     free(my_new_array);
@@ -143,17 +141,13 @@ RC_GTEST_PROP(GetSortedTests,
      * Check that the original array was not modified.
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
-    ;
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
+    std::vector<int> my_array = values;
+    std::vector<int> my_array_copy = values;
 
-    int my_array_copy[values.size()];
-    copy_vector_to_array(values, my_array_copy);
+    int* my_new_array = get_sorted(my_array.data(), my_array.size());
 
-    int* my_new_array = get_sorted(my_array, values.size());
-
-    for (int i = 0; i < values.size(); i++) {
-        EXPECT_EQ(my_array_copy[i], my_array[i]);
+    for (size_t i = 0; i < values.size(); i++) {
+        RC_ASSERT(my_array_copy[i] == my_array[i]);
     }
 
     free(my_new_array);
@@ -168,15 +162,14 @@ RC_GTEST_PROP(GetSortedTests,
      * (ar and copy point to different locations in memory and no parts of the two arrays overlap)
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
-    int my_array[values.size()];
-    copy_vector_to_array(values, my_array);
-    int* my_new_array = get_sorted(my_array, values.size());
+    std::vector<int> my_array = values;
+    int* my_new_array = get_sorted(my_array.data(), my_array.size());
 
-    for (int i = 0; i < values.size() - 1; i++) {
-        EXPECT_LE(my_new_array[i], my_new_array[i+1]);
+    for (size_t i = 0; i < values.size() - 1; i++) {
+        RC_ASSERT(my_new_array[i] <= my_new_array[i+1]);
     }
 
-    EXPECT_NE(my_array, my_new_array);
+    RC_ASSERT_FALSE(my_array.data() == my_new_array);
 
     free(my_new_array);
 

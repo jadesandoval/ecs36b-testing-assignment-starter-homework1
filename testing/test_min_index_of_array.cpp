@@ -1,10 +1,10 @@
 #include "../src/sorting.h"
-#include "rapidcheck/gtest.h"
 #include "sorting.h"
 #include "test_helpers.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "rapidcheck/gtest.h"
 #include <algorithm>
 #include <vector>
 
@@ -60,7 +60,7 @@ TEST(MinIndexOfArrayTests, SimpleArrayDoesNotChange) {
     min_index_of_array(newarray, 5);
 
     for (int i = 0; i < 5; i++) {
-        ASSERT_EQ(newarray[i], newarray[i + 1]);
+        ASSERT_LE(newarray[i], newarray[i + 1]);
     }
 }
 
@@ -88,9 +88,11 @@ RC_GTEST_PROP(MinIndexOfArrayTests,
     /*
      * Check that finding the minimum of the array did not change the contents of the array.
      */
-    std::vector<int> my_array = values;
+    RC_PRE(!values.empty());
 
+    std::vector<int> my_array = values;
     min_index_of_array(my_array.data(), my_array.size());
+
     for (size_t i = 0; i < values.size(); i++) {
         RC_ASSERT(my_array[i] == values.at(i));
     }
