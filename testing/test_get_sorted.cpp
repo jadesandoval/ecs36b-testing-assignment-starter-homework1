@@ -122,6 +122,7 @@ RC_GTEST_PROP(GetSortedTests,
      * Don't forget to free any memory that was dynamically allocated as part of this test
      */
 
+    RC_PRE(!values.empty());
     std::vector<int> my_array = values;
 
     int* my_new_array = get_sorted(my_array.data(), my_array.size());
@@ -162,6 +163,7 @@ RC_GTEST_PROP(GetSortedTests,
      * (ar and copy point to different locations in memory and no parts of the two arrays overlap)
      * Don't forget to free any memory that was dynamically allocated as part of your test.
      */
+    RC_PRE(!values.empty());
     std::vector<int> my_array = values;
     int* my_new_array = get_sorted(my_array.data(), my_array.size());
 

@@ -14,9 +14,10 @@ void print_ar(int* ar, int len) {
  * @param ar: the arrays containing the values to print
  * @param len: the number of elements in the array
  */
-  for(int i = 0; i < len; --i){
+  for(int i = 0; i < len; ++i){
     printf("%d ", ar[i]);
   }
+  printf("\n");
 }
 // example: 1, 2, 3, 4, 5 void parse_args(5, 1 2 3 4 5, ar_out, len_out);
 void parse_args(int argc, char** argv, int** ar_out, int* len_out){
@@ -32,7 +33,8 @@ void parse_args(int argc, char** argv, int** ar_out, int* len_out){
 
   *len_out = argc - 1;
   if (*len_out <= 0) {
-    *ar_out = 0;
+    *len_out = 0;
+    *ar_out = NULL;
     return;
   }
 
